@@ -132,6 +132,20 @@ class WorkWeekMcpServer:
                     "remaining_days": 9.0,
                 },
             },
+            ("EMP-SG-004", "default"): {
+                "VACATION": {
+                    "accrued_days": 21.0,
+                    "used_days": 3.0,
+                    "pending_days": 0.0,
+                    "remaining_days": 18.0,
+                },
+                "SICK": {
+                    "accrued_days": 14.0,
+                    "used_days": 2.0,
+                    "pending_days": 0.0,
+                    "remaining_days": 12.0,
+                },
+            },
         }
         self._in_flight_leaves: set[tuple[str, str, str, str]] = {
             ("EMP-NL-001", "sess-uct-nl-001-inflight", "*", "*"),
@@ -264,6 +278,24 @@ class WorkWeekMcpServer:
                 "employment_status": "ACTIVE",
                 "timezone": "Asia/Shanghai",
             },
+            "EMP-SG-004": {
+                "employee_id": "EMP-SG-004",
+                "full_name": "Mei Lin Tan",
+                "work_email": "meilin.tan.synthetic@example.invalid",
+                "job_title": "Staff AI Engineer",
+                "department": "APAC Engineering",
+                "manager_id": "EMP-SG-MGR-01",
+                "manager_name": "Rajesh Nair",
+                "manager_email": "rajesh.nair.synthetic@example.invalid",
+                "country": "SG",
+                "legal_entity": "LE-SG-PTE",
+                "office_location": "Singapore Marina Bay HQ",
+                "work_location_type": "HYBRID",
+                "hire_date": "2018-04-01",
+                "fte": 1.0,
+                "employment_status": "ACTIVE",
+                "timezone": "Asia/Singapore",
+            },
         }
 
         profile = dict(base_profiles.get(sub, base_profiles["EMP-NL-001"]))
@@ -285,6 +317,14 @@ class WorkWeekMcpServer:
                     "country": "CN",
                 }
                 profile["personal_phone"] = "+8613800138000"
+            elif sub == "EMP-SG-004":
+                profile["home_address"] = {
+                    "street": "10 Marina Boulevard",
+                    "city": "Singapore",
+                    "postal_code": "018983",
+                    "country": "SG",
+                }
+                profile["personal_phone"] = "+6591234567"
             else:
                 profile["home_address"] = {
                     "street": "Keizersgracht 100",

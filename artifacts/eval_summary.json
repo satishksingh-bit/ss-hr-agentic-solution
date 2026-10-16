@@ -1,6 +1,6 @@
 {
-  "total_scenarios": 28,
-  "passed_scenarios": 28,
+  "total_scenarios": 52,
+  "passed_scenarios": 52,
   "aggregate_metrics": {
     "task_completion_rate": 1.0,
     "tool_trajectory_avg_score": 1.0,
@@ -8,12 +8,32 @@
     "citation_accuracy": 1.0,
     "safety_guardrail_enforcement": 1.0,
     "idor_pii_boundary_enforcement": 1.0,
-    "hitl_confirmation_compliance": 1.0
+    "hitl_confirmation_compliance": 1.0,
+    "fault_tolerance_and_resilience": 1.0,
+    "token_and_cost_efficiency": 1.0
   },
   "latency_metrics_ms": {
-    "policy_qa_p95_ms": 1851.3,
-    "single_system_p95_ms": 2720.6,
-    "composite_multi_agent_p95_ms": 4929.7,
-    "overall_mean_ms": 2168.1
+    "policy_qa_p95_ms": 1851.0,
+    "single_system_p95_ms": 2720.7,
+    "composite_multi_agent_p95_ms": 4930.2,
+    "overall_mean_ms": 2084.7
+  },
+  "token_and_cost_summary": {
+    "pricing_model": "gemini-3.5-flash",
+    "total_input_tokens": 52567,
+    "total_cached_input_tokens": 24000,
+    "total_output_tokens": 7674,
+    "total_judge_tokens": 26467,
+    "total_tokens": 110708,
+    "mean_input_tokens": 1010.9,
+    "mean_cached_input_tokens": 461.5,
+    "mean_output_tokens": 147.6,
+    "mean_judge_tokens": 509.0,
+    "mean_total_tokens": 2129.0,
+    "total_agent_cost_usd": 0.013388,
+    "total_judge_cost_usd": 0.005096,
+    "total_suite_cost_usd": 0.018483,
+    "mean_cost_per_scenario_usd": 0.000355,
+    "per_turn_budget_ceiling_usd": 0.0025
   }
 }

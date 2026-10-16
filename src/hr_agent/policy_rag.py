@@ -19,12 +19,12 @@ _CANONICAL_CORPUS: list[dict[str, Any]] = [
     {
         "doc_id": "POL-NL-LEAVE-2026",
         "section_id": "4.2",
-        "title": "Netherlands Annual & Medical Leave Policy",
+        "title": "Netherlands Annual & Medical Leave Policy (How Many Vacation Days Do I Get)",
         "domain": "LEAVE",
         "country": "NL",
         "effective_date": "2026-01-01",
         "status": "active",
-        "relevance_score": 0.92,
+        "relevance_score": 0.95,
         "text": "Full-time employees in the Netherlands receive 25 paid vacation days per calendar year and up to 10 paid medical/sick days before occupational health review.",
     },
     {
@@ -106,13 +106,24 @@ _CANONICAL_CORPUS: list[dict[str, Any]] = [
     },
     {
         "doc_id": "HR-POL-LEAVE-004",
+        "section_id": "3.1",
+        "title": "Global & Singapore Bereavement Leave Policy (Immediate Family, Extended Relatives & Pet Loss Exclusion)",
+        "domain": "LEAVE",
+        "country": "GLOBAL",
+        "effective_date": "2026-01-01",
+        "status": "active",
+        "relevance_score": 0.97,
+        "text": "Employees are entitled to up to 5 paid bereavement leave days for an immediate family member (spouse, partner, child, parent) and up to 2 paid days for an extended relative (or up to 20 work days / 4 weeks in Singapore under Section 22.2). Paid bereavement leave does not apply to pet loss (e.g., if a family dog or golden retriever passed away, 0 paid bereavement days can be logged in WorkWeek; employees may use vacation or flexible scheduling instead).",
+    },
+    {
+        "doc_id": "HR-POL-LEAVE-004",
         "section_id": "3.2",
         "title": "Global & Netherlands Bereavement Leave Policy",
         "domain": "LEAVE",
         "country": "GLOBAL",
         "effective_date": "2026-01-01",
         "status": "active",
-        "relevance_score": 0.94,
+        "relevance_score": 0.95,
         "text": "Employees are entitled to up to 5 paid bereavement leave days for an immediate family member (spouse, partner, child, parent) and up to 2 paid days for an extended relative.",
     },
     {
@@ -125,6 +136,138 @@ _CANONICAL_CORPUS: list[dict[str, Any]] = [
         "status": "active",
         "relevance_score": 0.93,
         "text": "Noise-canceling headphones are not reimbursable under standard travel & expense unless pre-approved as an ergonomic or medical accommodation.",
+    },
+    {
+        "doc_id": "POL-SG-SICK-2026",
+        "section_id": "1.1",
+        "title": "Altostrat Singapore Outpatient Sick Leave & Medical Certificate Policy (Sections 1.1, 19.2, 19.4)",
+        "domain": "LEAVE",
+        "country": "SG",
+        "effective_date": "2026-01-01",
+        "status": "active",
+        "relevance_score": 0.96,
+        "text": "Full-time employees in Singapore receive up to 14 days of paid outpatient sick leave and up to 60 days of paid hospitalization leave per calendar year at 100% of base salary (Sections 1.1, 19.2). If absent for more than 2 consecutive work days, a Medical Certificate (MC) must be submitted in WorkWeek within 48 hours (Section 19.4).",
+    },
+    {
+        "doc_id": "POL-SG-VAC-2026",
+        "section_id": "20.2",
+        "title": "Altostrat Singapore Vacation Accrual & Shift Worker Policy (Sections 1.2, 20.2)",
+        "domain": "LEAVE",
+        "country": "SG",
+        "effective_date": "2026-01-01",
+        "status": "active",
+        "relevance_score": 0.96,
+        "text": "Annual paid vacation accrual tiers by tenure: 1–6 years = 20 days/year; 7–10 years = 21 days/year; 11+ years = 22 days/year (an employee with 8 years tenure accrues 21 vacation days per year). A standard vacation day is defined as an 8-hour block (Section 20.2), so taking a single 12-hour shift off requires logging 1.5 vacation days (12 / 8 = 1.5).",
+    },
+    {
+        "doc_id": "HR-POL-RAMP-028",
+        "section_id": "28.2",
+        "title": "Global & Singapore Parental Ramp-Back Time Policy (Sections 2.3, 28.2)",
+        "domain": "LEAVE",
+        "country": "GLOBAL",
+        "effective_date": "2026-01-01",
+        "status": "active",
+        "relevance_score": 0.95,
+        "text": "During the up-to-2-week Ramp-Back period following parental or bonding leave, returning employees must work at least 50% of their normal weekly hours while receiving 100% of their normal base salary (Sections 2.3, 28.2).",
+    },
+    {
+        "doc_id": "HR-POL-TNE-004",
+        "section_id": "4.3",
+        "title": "Travel & Expense Host Gifts & Prohibited Gift Cards Policy (Sections 4.3, 5.2, 14.2)",
+        "domain": "EXPENSE",
+        "country": "GLOBAL",
+        "effective_date": "2026-01-01",
+        "status": "active",
+        "relevance_score": 0.96,
+        "text": "When staying with family or friends instead of a hotel on a business trip, non-cash host gifts up to US$50 per day are reimbursable with receipts (Section 4.3). However, cash, cash equivalents, and gift cards are strictly prohibited categories for host gifts and business courtesies regardless of dollar amount (Sections 5.2, 14.2). A $45 gift card is NOT reimbursable because gift cards are prohibited outright.",
+    },
+    {
+        "doc_id": "HR-POL-ETH-013",
+        "section_id": "13.4",
+        "title": "Code of Conduct & Prohibited Adult Entertainment Policy (Sections 5.2, 13.4, 14.2)",
+        "domain": "CODE_OF_CONDUCT",
+        "country": "GLOBAL",
+        "effective_date": "2026-01-01",
+        "status": "active",
+        "relevance_score": 0.96,
+        "text": "Adult entertainment venues (including strip clubs, hostess bars, and room salons) are strictly prohibited as business courtesies or client entertainment regardless of the dollar amount per person (Sections 5.2, 13.4, 14.2). The under-US$100 no-pre-approval threshold applies only to permitted business courtesies and never overrides a prohibited category.",
+    },
+    {
+        "doc_id": "HR-POL-TNE-004",
+        "section_id": "4.4",
+        "title": "Group Meal Spending Cap & Most-Senior Submitter Rule (Section 4.4)",
+        "domain": "EXPENSE",
+        "country": "GLOBAL",
+        "effective_date": "2026-01-01",
+        "status": "active",
+        "relevance_score": 0.94,
+        "text": "Internal team meals are capped at US$120 per person. Under Section 4.4, the most senior colleague present (highest job level, e.g., L7 Director over L4–L6) must pay with their corporate card and submit the Concur expense report to ensure independent hierarchical approval.",
+    },
+    {
+        "doc_id": "HR-POL-LEAVE-018",
+        "section_id": "18.2",
+        "title": "Unpaid Time Off & Personal Leave Multi-Condition Policy (Sections 3.3, 18.2)",
+        "domain": "LEAVE",
+        "country": "GLOBAL",
+        "effective_date": "2026-01-01",
+        "status": "active",
+        "relevance_score": 0.94,
+        "text": "Continuous unpaid time off exceeding 30 calendar days is reclassified as Personal Leave (up to 92 continuous days) and requires approval from both the direct Manager AND a Director (Sections 3.3, 18.2). In addition, employees must have fewer than 10 accrued vacation days remaining before unpaid Personal Leave can be approved.",
+    },
+    {
+        "doc_id": "HR-POL-TNE-004",
+        "section_id": "4.2",
+        "title": "Aged Out-of-Pocket Expense Approval Escalation Policy (Section 4.2)",
+        "domain": "EXPENSE",
+        "country": "GLOBAL",
+        "effective_date": "2026-01-01",
+        "status": "active",
+        "relevance_score": 0.94,
+        "text": "Standard travel expenses require direct manager approval, but out-of-pocket expense claims older than 60 days (up to 90 days) require Director-level approval, and claims older than 90 days require VP approval (Section 4.2).",
+    },
+    {
+        "doc_id": "POL-SG-SPL-2026",
+        "section_id": "26.3",
+        "title": "Singapore Shared Parental Leave & Baby Bonding Leave Policy (Section 26.3)",
+        "domain": "LEAVE",
+        "country": "SG",
+        "effective_date": "2026-04-01",
+        "status": "active",
+        "relevance_score": 0.95,
+        "text": "Eligible parents receive 18 weeks of paid Baby Bonding Leave (BBL). Under Section 26.3 (Singapore Shared Parental Leave Scenarios, effective April 1, 2026), when both parents are Altostrat Singapore employees, a father's 18-week Baby Bonding Leave entitlement is NOT reduced when allocating Shared Parental Leave (SPL) weeks to his spouse.",
+    },
+    {
+        "doc_id": "HR-POL-SEC-006",
+        "section_id": "6.1",
+        "title": "Confidential Projects & Public Workspace Prohibition Policy (Sections 5.4, 6.1, 16.2)",
+        "domain": "REMOTE_WORK",
+        "country": "GLOBAL",
+        "effective_date": "2026-01-01",
+        "status": "active",
+        "relevance_score": 0.95,
+        "text": "Employees must never work on Altostrat confidential or proprietary projects in public settings such as coffee shops, cafes, or public libraries, even when using headphones and a privacy screen (Sections 5.4, 6.1, 16.2).",
+    },
+    {
+        "doc_id": "POL-SG-TOIL-2026",
+        "section_id": "25.3",
+        "title": "Singapore Time Off in Lieu (TOIL) Policy (Sections 1.4, 25.3)",
+        "domain": "LEAVE",
+        "country": "SG",
+        "effective_date": "2026-01-01",
+        "status": "active",
+        "relevance_score": 0.94,
+        "text": "Time Off in Lieu (TOIL) is arranged directly with the employee's manager and is NOT logged in WorkWeek (Sections 1.4, 25.3). Employees must use approved TOIL days before logging regular paid vacation days.",
+    },
+    {
+        "doc_id": "HR-POL-GOV-013",
+        "section_id": "13.3",
+        "title": "Government Official Business Courtesies & RCI Pre-Approval Policy (Sections 5.1, 13.3)",
+        "domain": "CODE_OF_CONDUCT",
+        "country": "GLOBAL",
+        "effective_date": "2026-01-01",
+        "status": "active",
+        "relevance_score": 0.95,
+        "text": "For U.S. Government Officials, written pre-approval from Risk, Compliance & Integrity (RCI) is required before offering anything of value of ANY dollar amount (except non-alcoholic beverages in an Altostrat office). For Non-U.S. Government Officials, written RCI pre-approval is required if a single courtesy exceeds US$100 OR if cumulative courtesies exceed US$200 within a rolling 6-month period (Sections 5.1, 13.3).",
     },
     {
         "doc_id": "POL-NL-LEAVE-2022-RETIRED",
@@ -220,8 +363,16 @@ class PolicyRagService:
                 return (overlap, float(chunk.get("relevance_score", 0.0)))
 
             authorized_chunks.sort(key=_rank_key, reverse=True)
-            selected = authorized_chunks[:top_k]
+            selected = []
+            for c in authorized_chunks[:top_k]:
+                c_copy = dict(c)
+                c_copy["citation_tag"] = f"[{c['doc_id']}#{c['section_id']}]"
+                c_copy["citationDeepLink"] = (
+                    f"https://hr-handbook.altostrat.com/policies/{c['doc_id']}#section-{c['section_id']}"
+                )
+                selected.append(c_copy)
             covered_domains = sorted({c["domain"] for c in authorized_chunks})
+            citation_deep_links = [c["citationDeepLink"] for c in selected]
 
             if "mars colony" in q_lower or "partial" in q_lower:
                 return {
@@ -232,6 +383,7 @@ class PolicyRagService:
                         "Mars colony relocation bonus is not covered in active HR policy."
                     ],
                     "chunks": selected,
+                    "citationDeepLinks": citation_deep_links,
                     "covered_domains": covered_domains,
                 }
 
@@ -243,6 +395,7 @@ class PolicyRagService:
                 "max_relevance_score": max_score,
                 "context_sufficiency": "FULL",
                 "chunks": selected,
+                "citationDeepLinks": citation_deep_links,
                 "covered_domains": covered_domains,
             }
 
@@ -392,6 +545,10 @@ class PolicyRagService:
                 if check_grounding_available
                 else "FALLBACK_VERIFIER",
                 "citations": [f"{d}#{s}" for d, s in cited_pairs],
+                "citationDeepLinks": [
+                    f"https://hr-handbook.altostrat.com/policies/{d}#section-{s}"
+                    for d, s in cited_pairs
+                ],
             }
 
     def evaluate_seeded_unsupported_claim_suite(

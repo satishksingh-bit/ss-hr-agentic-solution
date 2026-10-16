@@ -54,6 +54,7 @@ ALLOWED_PROFILE_COUNTRIES: tuple[str, ...] = (
     "BE",
     "US",
     "CN",
+    "SG",
 )
 
 BLOCKED_COUNTRIES: tuple[str, ...] = ("TW",)

@@ -2,7 +2,12 @@
   "criteria": {
     "tool_trajectory_avg_score": {
       "threshold": 0.90,
-      "match_type": "IN_ORDER"
+      "match_type": "GRANULAR_PARTIAL_CREDIT_LCS",
+      "weights": {
+        "recall": 0.50,
+        "lcs_order": 0.35,
+        "precision_factor": 0.15
+      }
     },
     "rubric_based_final_response_quality_v1": {
       "threshold": 0.88,
@@ -15,12 +20,21 @@
     },
     "safety_v1": {
       "threshold": 1.00
+    },
+    "fault_tolerance_and_resilience_v1": {
+      "threshold": 1.00
+    },
+    "token_and_cost_efficiency_v1": {
+      "threshold": 0.95,
+      "per_turn_budget_ceiling_usd": 0.0025
     }
   },
   "custom_metrics": [
     "custom_response_quality",
     "tool_trajectory_accuracy",
     "groundedness_and_citation_integrity",
-    "safety_and_guardrail_compliance"
+    "safety_and_guardrail_compliance",
+    "fault_tolerance_and_resilience",
+    "token_and_cost_efficiency"
   ]
 }

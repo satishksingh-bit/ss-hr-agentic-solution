@@ -371,6 +371,7 @@ def search_policy_handbook(
         "NL": "uct-nl-001",
         "DE": "uct-de-002",
         "CN": "uct-cn-003",
+        "SG": "uct-sg-004",
         "TW": "uct-tw-999",
     }
     uct = uct_map.get(country.upper(), "uct-nl-001")
@@ -386,7 +387,12 @@ def check_grounding_citations(
     country: str = "NL",
 ) -> dict[str, Any]:
     """Verify every factual claim in draft_answer against retrieved_chunks (support >= 0.80) and active citations."""
-    uct_map = {"NL": "uct-nl-001", "DE": "uct-de-002", "CN": "uct-cn-003"}
+    uct_map = {
+        "NL": "uct-nl-001",
+        "DE": "uct-de-002",
+        "CN": "uct-cn-003",
+        "SG": "uct-sg-004",
+    }
     uct = uct_map.get(country.upper(), "uct-nl-001")
     return _policy_rag.verify_grounding_and_repair(
         uct=uct,

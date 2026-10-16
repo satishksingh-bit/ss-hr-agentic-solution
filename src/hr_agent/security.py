@@ -1125,7 +1125,7 @@ class TelemetrySanitizer:
 
 
 _SHORTHAND_UCT_PATTERN = re.compile(
-    r"^(uct-(nl-001|de-002|cn-003|tw-999)(-[a-z0-9_ -]+)?|shakedown-uct-jwt)$"
+    r"^(uct-(nl-001|de-002|cn-003|sg-004|tw-999)(-[a-z0-9_ -]+)?|shakedown-uct-jwt)$"
 )
 
 
@@ -1200,6 +1200,18 @@ def parse_uct_or_shorthand(
     ):
         return {"valid": False, "error_code": ErrorCode.AUTHN_FAILED}
 
+    if "sg-004" in lower or "-sg-" in lower:
+        return {
+            "valid": True,
+            "sub": "EMP-SG-004",
+            "country": "SG",
+            "legal_entity": "LE-SG-PTE",
+            "manager_id": "EMP-SG-MGR-01",
+            "fte": 1.0,
+            "email": "meilin.tan.synthetic@example.invalid",
+            "session_id": f"sess-{lower}",
+            "raw_uct": token,
+        }
     if "cn-003" in lower or "-cn-" in lower:
         return {
             "valid": True,

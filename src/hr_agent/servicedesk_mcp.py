@@ -184,6 +184,11 @@ class ServiceDeskMcpServer:
                 "detailed_description": "My laptop display flickers every 5 minutes.",
                 "priority": TicketPriority.P2_HIGH.value,
                 "assignee": "EU Desktop Support",
+                "assignment_group": "EMEA Endpoint Engineering",
+                "sla_target_hours": 8,
+                "sla_status": "WITHIN_SLA",
+                "created_at_utc": "2026-05-29T09:15:00Z",
+                "updated_at_utc": "2026-05-30T14:40:00Z",
                 "automation_origin": "hr-agent-mvp1",
                 "comments": [
                     {
@@ -205,6 +210,11 @@ class ServiceDeskMcpServer:
                 "detailed_description": "Need hardware token resynced.",
                 "priority": TicketPriority.P3_MODERATE.value,
                 "assignee": "Network SecOps",
+                "assignment_group": "Global IAM & VPN Operations",
+                "sla_target_hours": 24,
+                "sla_status": "IN_PROGRESS_ON_TRACK",
+                "created_at_utc": "2026-05-31T11:20:00Z",
+                "updated_at_utc": "2026-06-01T08:05:00Z",
                 "automation_origin": "hr-agent-mvp1",
                 "comments": [],
             },
