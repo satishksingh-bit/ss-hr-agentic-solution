@@ -1,0 +1,342 @@
+openapi: 3.1.0
+info:
+  title: WorkWeek HCM Proxy & Mock SaaS Specification
+  version: 1.0.0
+  description: >
+    OpenAPI 3.1.0 specification for the WorkWeek HCM Proxy Service and
+    upstream Mock SaaS integration (https://mock-saas.aishprabhat.demo.altostrat.com/docs).
+    Enforces strict field allow-listing (Section 4.3 / Section 8.1) and excludes
+    sensitive PII (salary, bank_account_iban, national_id_ssn, medical_diagnosis).
+servers:
+  - url: https://mock-saas.aishprabhat.demo.altostrat.com
+    description: Hosted Mock SaaS Backend (IAP OAuth2 Client ID 332638604308-825bkuk2cjp8h06t1g41o2lvk8oq9cnk.apps.googleusercontent.com)
+  - url: http://127.0.0.1:18090
+    description: Local Mock SaaS Harness (local_mock transport mode)
+paths:
+  /workweek/profile:
+    get:
+      operationId: get_my_profile
+      summary: Read authenticated employee profile (projected through allow-list)
+      parameters:
+        - name: X-User-Context-Assertion
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: X-Automation-Origin
+          in: header
+          required: true
+          schema:
+            type: string
+            default: hr-agent-mvp1
+      responses:
+        "200":
+          description: Projected employee profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeProfileResponse"
+    patch:
+      operationId: update_my_contact_info
+      summary: Update employee personal contact details (requires HITL confirmation token)
+      parameters:
+        - name: X-User-Context-Assertion
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: X-Automation-Origin
+          in: header
+          required: true
+          schema:
+            type: string
+            default: hr-agent-mvp1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateContactRequest"
+      responses:
+        "200":
+          description: Contact information updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WriteAuditResponse"
+  /workweek/leave-balances:
+    get:
+      operationId: get_my_leave_balances
+      summary: Read live vacation and sick leave balances for authenticated employee
+      parameters:
+        - name: X-User-Context-Assertion
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: leave_type
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [ALL, VACATION, SICK, BEREAVEMENT, PARENTAL, STUDY]
+      responses:
+        "200":
+          description: Live leave balances
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeaveBalancesResponse"
+  /workweek/leave-requests:
+    get:
+      operationId: list_my_leave_requests
+      summary: List submitted leave requests for authenticated employee
+      parameters:
+        - name: X-User-Context-Assertion
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of employee leave requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  requests:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/LeaveRequestRecord"
+    post:
+      operationId: submit_my_leave_request
+      summary: Submit or validate a new leave request (requires HITL confirmation token for write)
+      parameters:
+        - name: X-User-Context-Assertion
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: X-Automation-Origin
+          in: header
+          required: true
+          schema:
+            type: string
+            default: hr-agent-mvp1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubmitLeaveRequest"
+      responses:
+        "200":
+          description: Leave request submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeaveRequestRecord"
+components:
+  schemas:
+    EmployeeProfileResponse:
+      type: object
+      required:
+        - employee_id
+        - full_name
+        - work_email
+        - job_title
+        - department
+        - manager_id
+        - manager_name
+        - country
+        - legal_entity
+        - office_location
+        - work_location_type
+        - hire_date
+        - fte
+        - employment_status
+        - timezone
+      properties:
+        employee_id:
+          type: string
+        full_name:
+          type: string
+        work_email:
+          type: string
+        job_title:
+          type: string
+        department:
+          type: string
+        manager_id:
+          type: string
+        manager_name:
+          type: string
+        manager_email:
+          type: string
+        country:
+          type: string
+        legal_entity:
+          type: string
+        office_location:
+          type: string
+        work_location_type:
+          type: string
+          enum: [OFFICE, HYBRID, REMOTE]
+        hire_date:
+          type: string
+          format: date
+        fte:
+          type: number
+        employment_status:
+          type: string
+        timezone:
+          type: string
+        personal_phone:
+          type: string
+        home_address:
+          type: object
+          properties:
+            street:
+              type: string
+            city:
+              type: string
+            postal_code:
+              type: string
+            country:
+              type: string
+    UpdateContactRequest:
+      type: object
+      required:
+        - confirmation_token
+        - idempotency_key
+      properties:
+        personal_phone:
+          type: string
+          pattern: "^\\+[1-9][0-9]{6,14}$"
+        personal_email:
+          type: string
+          format: email
+        home_address:
+          type: object
+          required: [street, city, postal_code, country]
+          properties:
+            street:
+              type: string
+            city:
+              type: string
+            postal_code:
+              type: string
+            country:
+              type: string
+        confirmation_token:
+          type: string
+        idempotency_key:
+          type: string
+          format: uuid
+    LeaveBalancesResponse:
+      type: object
+      required:
+        - employee_id
+        - as_of_utc
+        - balances
+      properties:
+        employee_id:
+          type: string
+        as_of_utc:
+          type: string
+          format: date-time
+        balances:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              accrued_days:
+                type: number
+              used_days:
+                type: number
+              pending_days:
+                type: number
+              remaining_days:
+                type: number
+    SubmitLeaveRequest:
+      type: object
+      required:
+        - leave_type
+        - start_date
+        - end_date
+        - confirmation_token
+        - idempotency_key
+      properties:
+        leave_type:
+          type: string
+          enum: [VACATION, SICK, BEREAVEMENT, PARENTAL, STUDY]
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        reason_note:
+          type: string
+          maxLength: 500
+        confirmation_token:
+          type: string
+        idempotency_key:
+          type: string
+          format: uuid
+    LeaveRequestRecord:
+      type: object
+      required:
+        - request_id
+        - status
+        - leave_type
+        - start_date
+        - end_date
+        - requested_days
+      properties:
+        request_id:
+          type: string
+        status:
+          type: string
+        leave_type:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        requested_days:
+          type: number
+        remaining_balance_after:
+          type: number
+    WriteAuditResponse:
+      type: object
+      required:
+        - status
+        - audit_id
+        - updated_fields
+      properties:
+        status:
+          type: string
+        audit_id:
+          type: string
+        updated_fields:
+          type: array
+          items:
+            type: string

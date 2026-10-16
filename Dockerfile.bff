@@ -1,0 +1,27 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    HOST=127.0.0.1 \
+    PORT=8080 \
+    OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=NO_CONTENT \
+    ADK_CAPTURE_MESSAGE_CONTENT_IN_SPANS=false \
+    GENAI_COMPLETION_HOOKS_ENABLED=false \
+    BQ_AGENT_ANALYTICS_RAW_LOGGING=false \
+    MODEL_ARMOR_PLATFORM_LOGGING=false \
+    LOG_LEVEL=INFO
+
+COPY pyproject.toml README.md ./
+COPY src/ ./src/
+COPY config/ ./config/
+COPY web/ ./web/
+
+RUN pip install --no-cache-dir -e . && \
+    useradd --create-home --uid 10001 appuser
+USER 10001
+
+EXPOSE 8080
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD ["python", "-c", "import os, urllib.request; port = os.environ.get('PORT', '8080'); urllib.request.urlopen(f'http://127.0.0.1:{port}/healthz', timeout=3)"]
+CMD ["python", "-m", "hr_agent.bff"]

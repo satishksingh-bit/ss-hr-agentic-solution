@@ -1,0 +1,14 @@
+# What a deploy must not upload. Both `agents-cli deploy` and `gcloud` read this
+# file in preference to .gitignore once it exists, so it includes .gitignore
+# rather than restating it: a project keeps one list of build output and one
+# list of things that are merely not worth uploading.
+#!include:.gitignore
+
+.git
+.gitignore
+.gcloudignore
+.ruff_cache/
+uv.lock
+tests/
+artifacts/
+/extensions/

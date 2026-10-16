@@ -1,0 +1,251 @@
+openapi: 3.1.0
+info:
+  title: ServiceImmediately ITSM Proxy & Mock SaaS Specification
+  version: 1.0.0
+  description: >
+    OpenAPI 3.1.0 specification for the ServiceImmediately ITSM Proxy Service and
+    upstream Mock SaaS integration (https://mock-saas.aishprabhat.demo.altostrat.com/docs).
+    Enforces deterministic priority rules (P-01..P-13), ticket state machine transitions,
+    and medical privacy isolation (no sick/medical/leave_request_id leakage).
+servers:
+  - url: https://mock-saas.aishprabhat.demo.altostrat.com
+    description: Hosted Mock SaaS Backend (IAP OAuth2 Client ID 332638604308-825bkuk2cjp8h06t1g41o2lvk8oq9cnk.apps.googleusercontent.com)
+  - url: http://127.0.0.1:18090
+    description: Local Mock SaaS Harness (local_mock transport mode)
+paths:
+  /servicedesk/incidents:
+    get:
+      operationId: list_my_open_tickets
+      summary: Read or list tickets belonging to the authenticated employee
+      parameters:
+        - name: X-User-Context-Assertion
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: ticket_id
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: "^INC[0-9]{6,10}$"
+      responses:
+        "200":
+          description: Employee ticket record(s)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TicketListResponse"
+    post:
+      operationId: create_incident
+      summary: Create a new IT or HR service desk incident (requires HITL confirmation token)
+      parameters:
+        - name: X-User-Context-Assertion
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: X-Automation-Origin
+          in: header
+          required: true
+          schema:
+            type: string
+            default: hr-agent-mvp1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateIncidentRequest"
+      responses:
+        "200":
+          description: Incident ticket created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TicketRecord"
+  /servicedesk/incidents/{ticket_id}/comments:
+    post:
+      operationId: add_ticket_comment
+      summary: Append a comment to an owned incident ticket (requires HITL confirmation token)
+      parameters:
+        - name: ticket_id
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^INC[0-9]{6,10}$"
+        - name: X-User-Context-Assertion
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddTicketCommentRequest"
+      responses:
+        "200":
+          description: Comment added
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TicketRecord"
+  /servicedesk/incidents/{ticket_id}/status:
+    patch:
+      operationId: update_ticket_status
+      summary: Transition status of an owned incident ticket (requires HITL confirmation token)
+      parameters:
+        - name: ticket_id
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^INC[0-9]{6,10}$"
+        - name: X-User-Context-Assertion
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateTicketStatusRequest"
+      responses:
+        "200":
+          description: Ticket status updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TicketRecord"
+components:
+  schemas:
+    CreateIncidentRequest:
+      type: object
+      required:
+        - category
+        - short_description
+        - detailed_description
+        - priority
+        - confirmation_token
+        - idempotency_key
+      properties:
+        category:
+          type: string
+        short_description:
+          type: string
+          minLength: 10
+          maxLength: 160
+        detailed_description:
+          type: string
+          maxLength: 2000
+        priority:
+          type: string
+          enum: ["1 - Critical", "2 - High", "3 - Moderate", "4 - Low"]
+        confirmation_token:
+          type: string
+        idempotency_key:
+          type: string
+          format: uuid
+    AddTicketCommentRequest:
+      type: object
+      required:
+        - comment
+        - confirmation_token
+        - idempotency_key
+      properties:
+        comment:
+          type: string
+          minLength: 1
+          maxLength: 1000
+        confirmation_token:
+          type: string
+        idempotency_key:
+          type: string
+          format: uuid
+    UpdateTicketStatusRequest:
+      type: object
+      required:
+        - new_state
+        - confirmation_token
+        - idempotency_key
+      properties:
+        new_state:
+          type: string
+          enum: ["New", "In Progress", "On Hold", "Resolved", "Closed"]
+        reason:
+          type: string
+          maxLength: 500
+        confirmation_token:
+          type: string
+        idempotency_key:
+          type: string
+          format: uuid
+    TicketRecord:
+      type: object
+      required:
+        - ticket_id
+        - status
+        - category
+        - short_description
+        - priority
+        - assignee
+      properties:
+        ticket_id:
+          type: string
+          pattern: "^INC[0-9]{6,10}$"
+        status:
+          type: string
+        category:
+          type: string
+        short_description:
+          type: string
+        detailed_description:
+          type: string
+        priority:
+          type: string
+        assignee:
+          type: string
+        comments:
+          type: array
+          items:
+            type: object
+            properties:
+              author:
+                type: string
+              text:
+                type: string
+    TicketListResponse:
+      type: object
+      required:
+        - status
+        - tickets
+      properties:
+        status:
+          type: string
+        tickets:
+          type: array
+          items:
+            $ref: "#/components/schemas/TicketRecord"

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'" />
+  <title>GlobalCorp HR AI Assistant — ADK 2.1 Enterprise Workspace</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="app-shell">
+  <!-- Persistent AI Disclosure Banner (FR-103, WCAG 2.2 AA) -->
+  <header role="banner" aria-label="AI Disclosure Banner" id="ai-disclosure-banner" class="disclosure-header">
+    <div class="disclosure-left">
+      <span class="badge-pill badge-indigo">AI Disclosure • FR-103</span>
+      <p class="disclosure-text">
+        <strong>AI Disclosure:</strong> You are interacting with the GlobalCorp AI HR Assistant.
+        All write actions require your explicit review and whole-plan confirmation.
+        <a href="https://hr.internal.globalcorp.example.com/privacy-notice" id="privacy-notice-link" class="privacy-link" target="_blank" rel="noopener noreferrer">Employee Privacy Notice</a>
+      </p>
+    </div>
+    <div class="disclosure-right">
+      <span id="engine-version-badge" class="badge-pill badge-emerald">Engine: hr-agent-green-v1-3-0</span>
+      <span class="badge-pill badge-slate">127.0.0.1 Loopback • Zero-SPII</span>
+      <span class="badge-pill badge-slate">WCAG 2.2 AA</span>
+      <button type="button" id="open-policy-inspector-btn" class="btn-ghost-sm" aria-label="Open Policy Citation Inspector">Policy Inspector</button>
+      <button type="button" id="theme-toggle-btn" class="btn-ghost-sm" aria-label="Toggle Light or Dark Theme">☀ Light / 🌙 Dark</button>
+    </div>
+  </header>
+
+  <!-- 3-Pane Responsive Enterprise Workspace -->
+  <div class="workspace-grid">
+    <!-- Left Sidebar: Brand, Persona Switcher, 10 Guided CUJ Scenarios, Session Telemetry -->
+    <aside class="sidebar-pane" aria-label="Persona and Scenario Launcher Sidebar">
+      <div class="brand-card">
+        <div class="brand-header">
+          <div class="brand-logo" aria-hidden="true">HR</div>
+          <div class="brand-titles">
+            <h1 class="brand-title">GlobalCorp HR AI</h1>
+            <p class="brand-subtitle">Google ADK 2.1 • Vertex Check Grounding</p>
+          </div>
+        </div>
+        <div class="brand-tags">
+          <span class="tag-chip">gemini-3.8-flash</span>
+          <span class="tag-chip">ES256 KMS</span>
+          <span class="tag-chip">6-DB Isolation</span>
+        </div>
+      </div>
+
+      <!-- Persona Switcher & Identity Card -->
+      <div id="persona-bar" aria-label="Persona Switcher Toolbar" class="sidebar-section persona-card">
+        <div class="section-title-row">
+          <label for="persona-switcher" class="section-label">Active Employee Persona</label>
+          <span id="persona-country-pill" class="badge-pill badge-indigo">NL • Europe/Amsterdam</span>
+        </div>
+        <select id="persona-switcher" aria-label="Select Synthetic Employee Persona" class="select-control">
+          <option value="eva.bakker.synthetic@example.invalid">Eva Bakker (EMP-NL-001, NL)</option>
+          <option value="lukas.mueller.synthetic@example.invalid">Lukas Mueller (EMP-DE-002, DE)</option>
+          <option value="wei.chen.synthetic@example.invalid">Wei Chen (EMP-CN-003, CN)</option>
+        </select>
+
+        <div id="persona-profile-summary" class="persona-meta-grid">
+          <div class="meta-item">
+            <span class="meta-key">Employee ID</span>
+            <span id="meta-emp-id" class="meta-val">EMP-NL-001</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-key">Legal Entity</span>
+            <span id="meta-legal-entity" class="meta-val">LE-NL-BV</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-key">Work Mode</span>
+            <span id="meta-work-mode" class="meta-val">REMOTE / HYBRID</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-key">Leave Policy</span>
+            <span id="meta-leave-entitlement" class="meta-val">25 Days / Year</span>
+          </div>
+        </div>
+
+        <div class="persona-actions-row">
+          <button type="button" id="test-tw-geofence-btn" class="btn-warning-outline">
+            🛡 Test Taiwan (TW) Geofence Block (FR-027)
+          </button>
+        </div>
+        <div id="geofence-alert-box" class="geofence-alert" role="alert" hidden></div>
+      </div>
+
+      <!-- 1-Click Guided Test Scenarios (10 CUJs) -->
+      <div class="sidebar-section scenarios-container">
+        <div class="section-title-row">
+          <span class="section-label">1-Click Guided Test Scenarios</span>
+          <span class="badge-pill badge-slate">10 CUJs</span>
+        </div>
+        <p class="section-helper">Click any scenario below to immediately run the end-to-end journey:</p>
+        <div id="scenario-list" class="scenario-list" role="group" aria-label="Guided Test Scenarios"></div>
+      </div>
+
+      <!-- Session & Security Status Footer -->
+      <div class="sidebar-footer">
+        <div class="session-stats">
+          <div class="stat-col">
+            <span class="stat-label">Active Session</span>
+            <span id="active-session-badge" class="stat-value">Not started</span>
+          </div>
+          <div class="stat-col">
+            <span class="stat-label">Turns / Strikes</span>
+            <span id="turn-strike-badge" class="stat-value">0 turns • 0/2 strikes</span>
+          </div>
+        </div>
+        <button type="button" id="logout-btn" class="btn-danger-soft">End Session</button>
+      </div>
+    </aside>
+
+    <!-- Center Chat Workspace -->
+    <main role="main" aria-label="HR Assistant Conversation" class="chat-workspace">
+      <!-- Top Telemetry & Status Bar -->
+      <div class="workspace-statusbar">
+        <div class="status-left">
+          <span id="status-dot" class="status-dot status-idle" aria-hidden="true"></span>
+          <div id="tool-status-bar" role="status" aria-live="polite" class="tool-status-text">Status: IDLE</div>
+        </div>
+        <div class="status-right">
+          <span class="telemetry-chip">Coordinator: <strong>gemini-3.8-flash</strong></span>
+          <span class="telemetry-chip">Grounding Gate: <strong>≥ 0.80</strong></span>
+          <button type="button" id="toggle-hero-btn" class="btn-ghost-xs">Toggle Welcome Guide</button>
+        </div>
+      </div>
+
+      <!-- Collapsible Welcome Hero Card -->
+      <section id="welcome-hero-card" aria-label="Welcome and Quick Start Capabilities" class="welcome-hero">
+        <div class="hero-top">
+          <div>
+            <span class="badge-pill badge-indigo">Enterprise Multi-Agent Architecture • MVP 1</span>
+            <h2 class="hero-heading">Welcome to the GlobalCorp AI HR &amp; IT Assistant</h2>
+            <p class="hero-desc">
+              Ask grounded HR policy questions with verifiable document citations, preview &amp; confirm WorkWeek leave or profile updates,
+              triage ServiceImmediately IT tickets with deterministic priority rules (P-01..P-13), or execute multi-agent cross-system sagas.
+            </p>
+          </div>
+        </div>
+        <div class="hero-quick-grid">
+          <button type="button" class="hero-quick-card" data-scenario-code="UC-1.1">
+            <span class="quick-code badge-indigo">UC-1.1 • Policy RAG</span>
+            <strong class="quick-title">Check Annual Vacation Entitlement</strong>
+            <span class="quick-sub">Retrieves country-scoped policy &amp; opens Citation Drawer</span>
+          </button>
+          <button type="button" class="hero-quick-card" data-scenario-code="UC-1.2">
+            <span class="quick-code badge-emerald">UC-1.2 • WorkWeek Write</span>
+            <strong class="quick-title">Book 3-Day Vacation (Jun 10–12)</strong>
+            <span class="quick-sub">Previews balance impact &amp; mints ES256 Confirmation Card</span>
+          </button>
+          <button type="button" class="hero-quick-card" data-scenario-code="UC-1.3">
+            <span class="quick-code badge-sky">UC-1.3 • ServiceImmediately</span>
+            <strong class="quick-title">Report Dead Laptop Screen (Rule P-04)</strong>
+            <span class="quick-sub">Demonstrates P1 → P2 single-user priority downgrade</span>
+          </button>
+          <button type="button" class="hero-quick-card" data-scenario-code="UC-2.2">
+            <span class="quick-code badge-purple">UC-2.2 • Multi-Agent Saga</span>
+            <strong class="quick-title">Medical Leave + Mailbox Delegation</strong>
+            <span class="quick-sub">2-step WorkWeek + ServiceDesk saga with FR-096 privacy</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Live Conversation Stream (aria-live="polite") -->
+      <section id="transcript-region" role="log" aria-live="polite" aria-atomic="false" class="transcript-stream"></section>
+
+      <!-- Elevated Whole-Plan Confirmation Card (FR-095, FR-101) -->
+      <section id="confirmation-card-region" role="region" aria-label="Pending Action Confirmation" class="confirmation-card-container" hidden></section>
+
+      <!-- Chat Message Composer -->
+      <form id="chat-form" aria-label="Send message to HR Assistant" class="composer-form">
+        <div class="composer-label-row">
+          <label for="message-input" class="composer-label">
+            Ask an HR policy, leave, or IT support question (English only, max 2,000 chars):
+          </label>
+          <span id="char-counter" class="char-counter">0 / 2,000 chars • Enter to send</span>
+        </div>
+        <div class="composer-input-row">
+          <textarea
+            id="message-input"
+            maxlength="2000"
+            required
+            rows="2"
+            placeholder="Select a 1-click scenario from the left sidebar or type your HR / IT request here..."
+            class="composer-textarea"
+          ></textarea>
+          <button type="submit" id="send-btn" class="btn-primary-send">
+            <span>Send</span>
+            <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      </form>
+    </main>
+
+    <!-- Right Slide-Over Policy Citation Viewer Drawer (FR-074, FR-077) -->
+    <aside id="citation-drawer" aria-label="Policy Citation Viewer Drawer" class="citation-drawer-pane" hidden>
+      <div id="citation-drawer-header" class="drawer-header">
+        <div>
+          <span class="badge-pill badge-indigo">Grounded Policy Source • FR-074</span>
+          <h2 id="citation-drawer-title" class="drawer-title">Policy Document Excerpt</h2>
+        </div>
+        <button type="button" id="citation-drawer-close" aria-label="Close Citation Viewer Drawer" class="btn-ghost-sm">✕ Close</button>
+      </div>
+      <div id="citation-drawer-body" class="drawer-body"></div>
+      <div class="drawer-footer">
+        <p class="drawer-footer-label">Security &amp; Country-Scope Boundary Tests (FR-017 / FR-077):</p>
+        <div class="drawer-test-buttons">
+          <button type="button" id="test-active-nl-doc-btn" class="btn-ghost-xs">View Active NL Leave Doc (200)</button>
+          <button type="button" id="test-cross-country-doc-btn" class="btn-warning-xs">Test Cross-Country Doc (404)</button>
+          <button type="button" id="test-retired-doc-btn" class="btn-warning-xs">Test Retired 2023 Doc (404)</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

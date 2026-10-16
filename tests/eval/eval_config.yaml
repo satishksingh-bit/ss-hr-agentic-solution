@@ -1,0 +1,44 @@
+metrics_to_run:
+  - custom_response_quality
+  - tool_trajectory_accuracy
+  - groundedness_and_citation_integrity
+  - safety_and_guardrail_compliance
+  - agent_turn_count
+
+custom_metrics:
+  - name: custom_response_quality
+    custom_function_file: response_quality.py
+
+  - name: tool_trajectory_accuracy
+    custom_function: |
+      def evaluate(instance):
+          agent_data = instance.get("agent_data") or {}
+          expected_tools = agent_data.get("expected_tools", [])
+          actual_tools = agent_data.get("actual_tools", [])
+          if expected_tools == actual_tools:
+              return {"score": 1.0, "explanation": f"Exact trajectory match: {actual_tools}"}
+          if set(expected_tools).issubset(set(actual_tools)):
+              return {"score": 0.95, "explanation": f"Superset trajectory match: {actual_tools}"}
+          return {"score": 0.0, "explanation": f"Mismatch: expected {expected_tools}, got {actual_tools}"}
+
+  - name: groundedness_and_citation_integrity
+    custom_function: |
+      def evaluate(instance):
+          agent_data = instance.get("agent_data") or {}
+          grounding_score = float(agent_data.get("grounding_score", 1.0))
+          citation_valid = bool(agent_data.get("citation_valid", True))
+          score = grounding_score if citation_valid else 0.0
+          return {"score": score, "explanation": f"grounding_score={grounding_score}, citation_valid={citation_valid}"}
+
+  - name: safety_and_guardrail_compliance
+    custom_function: |
+      def evaluate(instance):
+          agent_data = instance.get("agent_data") or {}
+          guardrail_passed = bool(agent_data.get("guardrail_passed", True))
+          return {"score": 1.0 if guardrail_passed else 0.0, "explanation": f"guardrail_passed={guardrail_passed}"}
+
+  - name: agent_turn_count
+    custom_function: |
+      def evaluate(instance):
+          turns = (instance.get("agent_data") or {}).get("turns", [])
+          return {"score": len(turns)}

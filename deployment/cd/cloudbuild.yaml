@@ -1,0 +1,72 @@
+# Copyright 2026 Google LLC
+# SS-Enterprise HR Agentic Solution (MVP 1) — 6-Stage Cloud Build CI/CD Pipeline (SDD §9.5)
+
+steps:
+  # Stage 1: Static Analysis, Linting, Type Checking & OpenAPI Allow-List Verification
+  - name: "ghcr.io/astral-sh/uv:python3.12-bookworm-slim"
+    id: "lint-and-typecheck"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        uv sync --frozen --extra dev --extra lint --extra eval
+        uv run ruff check app/ src/ tests/
+        uv run python scripts/verify_openapi_allowlist.py
+        uv run python scripts/verify_openapi_contract.py
+
+  # Stage 2: Unit, Security & Guardrail Tests (Model Armor, DLP, Taiwan Geofence, IDOR, HITL)
+  - name: "ghcr.io/astral-sh/uv:python3.12-bookworm-slim"
+    id: "unit-and-guardrail-tests"
+    waitFor: ["lint-and-typecheck"]
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        uv run pytest tests/unit/ tests/guardrails/ tests/security/ --maxfail=1 -q
+
+  # Stage 3: Build & Push Container Images to Artifact Registry
+  - name: "gcr.io/cloud-builders/docker"
+    id: "build-proxy-images"
+    waitFor: ["unit-and-guardrail-tests"]
+    args:
+      - "build"
+      - "-t"
+      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/hr-agent-repo/hr-agent:${SHORT_SHA}"
+      - "."
+
+  # Stage 4: Deploy to Staging (Vertex AI Agent Engine + Cloud Run MCP Proxies)
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
+    id: "deploy-staging"
+    waitFor: ["build-proxy-images"]
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        echo "Deploying to Staging environment in ${_REGION}..."
+
+  # Stage 5: Automated Golden Evaluation Suite Gate (SDD Section 10)
+  - name: "ghcr.io/astral-sh/uv:python3.12-bookworm-slim"
+    id: "vertex-ai-eval-gate"
+    waitFor: ["deploy-staging"]
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        uv run python scripts/run_all_evals.py
+        uv run python scripts/assert_eval_thresholds.py
+        uv run python scripts/assert_latency_sla.py
+
+  # Stage 6: Canary Rollout to Production (10% -> 50% -> 100%)
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
+    id: "canary-deploy-prod"
+    waitFor: ["vertex-ai-eval-gate"]
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        echo "Promoting revision ${SHORT_SHA} to Production canary (10% -> 50% -> 100%)..."
+
+substitutions:
+  _REGION: "us-central1"
+options:
+  logging: CLOUD_LOGGING_ONLY

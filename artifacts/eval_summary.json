@@ -1,0 +1,19 @@
+{
+  "total_scenarios": 28,
+  "passed_scenarios": 28,
+  "aggregate_metrics": {
+    "task_completion_rate": 1.0,
+    "tool_trajectory_avg_score": 1.0,
+    "groundedness": 1.0,
+    "citation_accuracy": 1.0,
+    "safety_guardrail_enforcement": 1.0,
+    "idor_pii_boundary_enforcement": 1.0,
+    "hitl_confirmation_compliance": 1.0
+  },
+  "latency_metrics_ms": {
+    "policy_qa_p95_ms": 1851.3,
+    "single_system_p95_ms": 2720.6,
+    "composite_multi_agent_p95_ms": 4929.7,
+    "overall_mean_ms": 2168.1
+  }
+}

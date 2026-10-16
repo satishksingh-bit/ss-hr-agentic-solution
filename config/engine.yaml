@@ -1,0 +1,61 @@
+# Declarative Agent Engine & Coordinator Configuration (SDD §5.6, FR-001, FR-002, CON-002, ADR-002)
+schema_version: "1.0"
+agent_id: "hr-agent-mvp1"
+framework: "google-adk"
+adk_version: "2.1.0"
+primary_region: "europe-west4"
+search_multi_region: "eu"
+supported_languages:
+  - "en"
+
+coordinator:
+  name: "hr_coordinator"
+  model: "gemini-3.8-flash"
+  fallback_model: "gemini-3.5-flash"
+  complex_reasoning_model: "gemini-2.5-pro"
+  max_sub_agents_per_turn: 3
+  max_model_calls_per_turn: 10
+  max_tool_calls_per_turn: 10
+  message_turn_deadline_ms: 30000
+  confirmation_turn_deadline_ms: 50000
+  executor_min_remaining_deadline_ms: 18000
+  session_context_window_turns: 10
+  vertex_memory_bank_enabled: false
+
+sub_agents:
+  - name: "policy_answer"
+    model: "gemini-3.8-flash"
+    fallback_model: "gemini-3.5-flash"
+    allowed_tools:
+      - "retrieve_policy_chunks"
+      - "evaluate_eligibility"
+      - "verify_grounding_and_repair"
+  - name: "workweek_ops"
+    model: "gemini-3.8-flash"
+    fallback_model: "gemini-3.5-flash"
+    allowed_tools:
+      - "get_my_profile"
+      - "get_my_leave_balances"
+      - "validate_leave_request"
+      - "validate_contact_update"
+      - "submit_my_leave_request"
+      - "update_my_contact_info"
+  - name: "servicedesk_ops"
+    model: "gemini-3.8-flash"
+    fallback_model: "gemini-3.5-flash"
+    allowed_tools:
+      - "get_my_ticket"
+      - "list_my_open_tickets"
+      - "validate_incident"
+      - "validate_ticket_update"
+      - "create_incident"
+      - "add_ticket_comment"
+      - "update_ticket_status"
+
+telemetry:
+  otel_instrumentation_genai_capture_message_content: "NO_CONTENT"
+  adk_capture_message_content_in_spans: false
+  genai_completion_hooks_enabled: false
+  bq_agent_analytics_raw_logging: false
+  model_armor_platform_logging: false
+  log_level: "INFO"
